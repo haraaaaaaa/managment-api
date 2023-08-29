@@ -4,12 +4,17 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const keys = require("./keys/keys");
 
-// Server Config
+// Required Middlewares
+const currentUser = require("./middlewares/currentUser");
+
+// Server Config & Middleware Config
 const app = express();
 
 app.set("trust proxy", true);
 app.use(express.json());
 app.use(cors());
+
+app.use(currentUser);
 
 // Required Models
 require("./models/business");
