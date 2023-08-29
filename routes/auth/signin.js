@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET_KEY } = require("../../keys/keys.js");
 
 const router = express.Router();
 
@@ -16,8 +17,8 @@ router.post("/api/users/signin", async (req, res) => {
   if (!isMatch) return res.status(401).send({ message: "Auth Failed" });
 
   res.status(201).send({
-    message: "auth successful",
-    token: jwt.sign({ id: existingUser._id }, "secret", {
+    message: "Auth Successful",
+    token: jwt.sign({ id: existingUser._id, role: existingUser.role }, JWT_SECRET_KEY, {
       expiresIn: "1h",
     }),
   });

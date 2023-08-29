@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const keys = require("./keys/keys");
 
 // Server Config
 const app = express();
@@ -36,7 +37,7 @@ app.use(createPartRouter);
 
 const start = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/managmentdb");
+    await mongoose.connect(keys.MONGO_URI);
     console.log("Connected to MongoDB.");
   } catch (error) {
     console.log(error);
