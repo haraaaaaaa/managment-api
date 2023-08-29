@@ -4,18 +4,14 @@ const Business = mongoose.model("businesses");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET_KEY } = require("../../keys/keys");
 
+// Required Middlewares
+const checkAuth = require("../../middlewares/checkAuth");
+
 const router = express.Router();
 
-router.get("/api/business", async (req, res) => {
-  const { token } = req.body;
-
-  const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
-
-  if (decodedToken.role !== "CEO") return res.status(403).send({ message: "Not Authorized!" });
-
-  const createdBusinessDoc = await Business.create({ name, parts: [], ownerId: decodedToken.id });
-
-  res.send(createdBusinessDoc);
+router.get("/api/business", checkAuth, async (req, res) => {
+  const businessesDoc = await Business.find({ ownerId: req.currentUser.id });
+  res.status(201).send(businessesDoc);
 });
 
 module.exports = router;
