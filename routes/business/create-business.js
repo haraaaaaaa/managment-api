@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/api/business", checkAuth, checkCEO, async (req, res) => {
   const { name } = req.body;
 
-  const createdBusinessDoc = await Business.create({ ownerId: req.currentUser.id, name, parts: [] });
+  const createdBusinessDoc = await Business.create({ ownerId: req.currentUser.id, name, parts: {} });
 
   res.send(createdBusinessDoc);
 });

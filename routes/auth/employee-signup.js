@@ -3,9 +3,13 @@ const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const { hash } = require("bcrypt");
 
+// Required Middlewares
+const checkAuth = require("../../middlewares/checkAuth");
+const checkCEO = require("../../middlewares/checkCEO");
+
 const router = express.Router();
 
-router.post("/api/users/signup", async (req, res) => {
+router.post("/api/users/employee-signup", checkAuth, checkCEO, async (req, res) => {
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -16,7 +20,8 @@ router.post("/api/users/signup", async (req, res) => {
   const createdUserDoc = await User.create({
     email,
     password: hashedPassword,
-    role: "CUSTOMER",
+    role: "EMPLOYEE",
+    ownerId: req.currentUser.id,
   });
 
   res.status(201).send(createdUserDoc);
